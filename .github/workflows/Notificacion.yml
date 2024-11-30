@@ -50,18 +50,39 @@ jobs:
               await client.login('${{ secrets.DISCORD_BOT_TOKEN }}');
               const guild = await client.guilds.fetch('${{ secrets.DISCORD_GUILD_ID }}');
               
-              const channel = await guild.channels.create({
-                name: 'github-notifications',
-                type: 0 // text channel
-              });
+              // Buscar canal existente
+              const channels = await guild.channels.fetch();
+              let channel = channels.find(c => c.name === 'github-notifications');
               
-              const webhook = await channel.createWebhook({
-                name: 'GitHub Notifications'
-              });
+              // Solo crear si no existe
+              if (!channel) {
+                console.log('Creando nuevo canal github-notifications');
+                channel = await guild.channels.create({
+                  name: 'github-notifications',
+                  type: 0
+                });
+              } else {
+                console.log('Canal github-notifications encontrado');
+              }
+              
+              // Buscar webhook existente
+              const webhooks = await channel.fetchWebhooks();
+              let webhook = webhooks.find(wh => wh.name === 'GitHub Notifications');
+              
+              // Solo crear webhook si no existe
+              if (!webhook) {
+                console.log('Creando nuevo webhook');
+                webhook = await channel.createWebhook({
+                  name: 'GitHub Notifications'
+                });
+              } else {
+                console.log('Webhook existente encontrado');
+              }
               
               core.setOutput('webhook_url', webhook.url);
               await client.destroy();
             } catch (error) {
+              console.error('Error completo:', error);
               core.setFailed(`Error: ${error.message}`);
               if (client) await client.destroy();
             }
