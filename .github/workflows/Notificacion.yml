@@ -28,52 +28,43 @@ jobs:
   setup-discord:
     if: github.ref == 'refs/heads/feature/josue'
     runs-on: ubuntu-latest
+    outputs:
+      webhook_url: ${{ steps.discord_setup.outputs.webhook_url }}
     steps:
       - name: Install Dependencies
-        run: npm install discord.js
+        run: |
+          npm init -y
+          npm install discord.js@14.14.1 --no-save
         
       - name: Setup Discord Channel
+        id: discord_setup
         uses: actions/github-script@v6
         with:
           script: |
-            const Discord = require('discord.js');
-            const client = new Discord.Client({ 
-              intents: [
-                Discord.GatewayIntentBits.Guilds,
-                Discord.GatewayIntentBits.GuildWebhooks
-              ]
+            const { Client, GatewayIntentBits } = require('discord.js');
+            const client = new Client({ 
+              intents: [GatewayIntentBits.Guilds]
             });
             
-            async function setup() {
+            try {
               await client.login('${{ secrets.DISCORD_BOT_TOKEN }}');
               const guild = await client.guilds.fetch('${{ secrets.DISCORD_GUILD_ID }}');
               
-              let category = guild.channels.cache.find(c => c.name === 'GitHub-Notifications');
-              if (!category) {
-                category = await guild.channels.create({
-                  name: 'GitHub-Notifications',
-                  type: Discord.ChannelType.GuildCategory
-                });
-              }
-              
-              let channel = guild.channels.cache.find(c => c.name === 'feature-josue');
-              if (!channel) {
-                channel = await guild.channels.create({
-                  name: 'feature-josue',
-                  type: Discord.ChannelType.GuildText,
-                  parent: category.id
-                });
-              }
+              const channel = await guild.channels.create({
+                name: 'github-notifications',
+                type: 0 // text channel
+              });
               
               const webhook = await channel.createWebhook({
                 name: 'GitHub Notifications'
               });
               
               core.setOutput('webhook_url', webhook.url);
-              core.setSecret(webhook.url);
+              await client.destroy();
+            } catch (error) {
+              core.setFailed(`Error: ${error.message}`);
+              if (client) await client.destroy();
             }
-            
-            setup();
 
   notify:
     needs: setup-discord
