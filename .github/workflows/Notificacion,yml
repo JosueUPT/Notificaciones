@@ -1,0 +1,34 @@
+name: Create Branch and Notify
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+
+jobs:
+  create-branch:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+      
+      - name: Create Josue branch
+        run: |
+          if ! git ls-remote --heads origin feature/josue | grep feature/josue > /dev/null; then
+            git checkout -b feature/josue
+            git push origin feature/josue
+          fi
+
+  notify:
+    needs: create-branch
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      
+      - name: Notify Discord
+        uses: up9cloud/action-notify@master
+        env:
+          GITHUB_JOB_STATUS: ${{ job.status }}
+          DISCORD_WEBHOOK_URL: "https://discord.com/api/webhooks/1312467361130877039/yhRDszvORRb98mcMVh8FJstak6U5HrYSCl7o8S-fXSQVXO_REnc97bUXxpyh91E5IcPG"
+          DISCORD_TEMPLATE_PATH: "./discord-template.json" 
