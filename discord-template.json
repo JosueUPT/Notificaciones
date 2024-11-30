@@ -21,13 +21,18 @@
           "inline": true
         },
         {
-          "name": "🔗 Repositorio",
-          "value": "${GITHUB_REPOSITORY}",
-          "inline": true
+          "name": "📄 Archivos Modificados",
+          "value": "```diff\n$(git diff --name-status HEAD~1)```",
+          "inline": false
+        },
+        {
+          "name": "📊 Cambios en index.html",
+          "value": "```html\n$(git diff HEAD~1 index.html)```",
+          "inline": false
         }
       ],
       "footer": {
-        "text": "Commit: ${GIT_SHA_SHORT}"
+        "text": "Commit: ${GIT_SHA_SHORT} | Repositorio: ${GITHUB_REPOSITORY}"
       },
       "timestamp": "${TIMESTAMP}"
     }

@@ -72,7 +72,15 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
       
+      - name: Get Changes
+        id: changes
+        run: |
+          echo "DIFF_FILES=$(git diff --name-status HEAD~1)" >> $GITHUB_ENV
+          echo "INDEX_CHANGES=$(git diff HEAD~1 index.html)" >> $GITHUB_ENV
+
       - name: Notify Discord
         uses: up9cloud/action-notify@master
         env:
@@ -85,3 +93,5 @@ jobs:
           STATUS_EMOJI_SUCCESS: "✅"
           STATUS_EMOJI_FAILURE: "❌"
           STATUS_EMOJI_CANCELLED: "⚪"
+          DIFF_FILES: ${{ env.DIFF_FILES }}
+          INDEX_CHANGES: ${{ env.INDEX_CHANGES }}
