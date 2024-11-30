@@ -1,25 +1,17 @@
 {
+  "content": "¡Nuevo commit detectado!",
   "embeds": [
     {
       "title": "🔄 Actualización en feature/josue",
-      "description": "Cambios realizados por ${GITHUB_ACTOR}",
-      "color": "3447003",
+      "description": "Se han realizado cambios en el repositorio",
+      "color": 3447003,
       "fields": [
         {
-          "name": "Estado",
-          "value": "${GITHUB_JOB_STATUS}",
-          "inline": true
-        },
-        {
-          "name": "Repositorio",
-          "value": "${GITHUB_REPOSITORY}",
+          "name": "Autor",
+          "value": "${GITHUB_ACTOR}",
           "inline": true
         }
-      ],
-      "footer": {
-        "text": "GitHub Actions"
-      },
-      "timestamp": "${TIMESTAMP}"
+      ]
     }
   ]
 } 
