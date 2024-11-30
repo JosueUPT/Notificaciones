@@ -1,17 +1,35 @@
 {
-  "content": "¡Nuevo commit detectado!",
   "embeds": [
     {
-      "title": "🔄 Actualización en feature/josue",
-      "description": "Se han realizado cambios en el repositorio",
-      "color": 3447003,
+      "title": "${STATUS_EMOJI} Actualización en ${GITHUB_REF_NAME}",
+      "description": "Se han detectado cambios en el repositorio",
+      "color": "${STATUS_COLOR_DECIMAL}",
       "fields": [
         {
-          "name": "Autor",
-          "value": "${GITHUB_ACTOR}",
+          "name": "📝 Commit",
+          "value": "${GIT_COMMIT_MESSAGE_ESCAPED}",
+          "inline": false
+        },
+        {
+          "name": "👤 Autor",
+          "value": "${GIT_COMMITTER_USERNAME}",
+          "inline": true
+        },
+        {
+          "name": "📌 Estado",
+          "value": "${GITHUB_JOB_STATUS}",
+          "inline": true
+        },
+        {
+          "name": "🔗 Repositorio",
+          "value": "${GITHUB_REPOSITORY}",
           "inline": true
         }
-      ]
+      ],
+      "footer": {
+        "text": "Commit: ${GIT_SHA_SHORT}"
+      },
+      "timestamp": "${TIMESTAMP}"
     }
   ]
 } 

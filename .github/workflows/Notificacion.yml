@@ -74,8 +74,14 @@ jobs:
       - uses: actions/checkout@v2
       
       - name: Notify Discord
-        run: |
-          echo "Enviando notificación a Discord..."
-          curl -X POST -H "Content-Type: application/json" \
-          -d '{"content": "Test desde GitHub Actions"}' \
-          "${{ needs.setup-discord.outputs.webhook_url }}"
+        uses: up9cloud/action-notify@master
+        env:
+          GITHUB_JOB_STATUS: ${{ job.status }}
+          DISCORD_WEBHOOK_URL: ${{ needs.setup-discord.outputs.webhook_url }}
+          DISCORD_TEMPLATE_PATH: "./discord-template.json"
+          STATUS_COLOR_SUCCESS: "#22863a"
+          STATUS_COLOR_FAILURE: "#cb2431"
+          STATUS_COLOR_CANCELLED: "#6a737d"
+          STATUS_EMOJI_SUCCESS: "✅"
+          STATUS_EMOJI_FAILURE: "❌"
+          STATUS_EMOJI_CANCELLED: "⚪"
