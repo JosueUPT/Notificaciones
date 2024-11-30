@@ -78,8 +78,22 @@ jobs:
       - name: Get Changes
         id: changes
         run: |
-          echo "DIFF_FILES=$(git diff --name-status HEAD~1)" >> $GITHUB_ENV
-          echo "INDEX_CHANGES=$(git diff HEAD~1 index.html)" >> $GITHUB_ENV
+          if git rev-parse HEAD~1 >/dev/null 2>&1; then
+            echo "DIFF_FILES<<EOF" >> $GITHUB_ENV
+            git diff --name-status HEAD~1 >> $GITHUB_ENV
+            echo "EOF" >> $GITHUB_ENV
+            
+            if [ -f index.html ]; then
+              echo "INDEX_CHANGES<<EOF" >> $GITHUB_ENV
+              git diff HEAD~1 index.html >> $GITHUB_ENV || echo "No hay cambios en index.html"
+              echo "EOF" >> $GITHUB_ENV
+            else
+              echo "INDEX_CHANGES=No existe el archivo index.html" >> $GITHUB_ENV
+            fi
+          else
+            echo "DIFF_FILES=Primer commit - no hay historial previo" >> $GITHUB_ENV
+            echo "INDEX_CHANGES=Primer commit - no hay cambios para mostrar" >> $GITHUB_ENV
+          fi
 
       - name: Notify Discord
         uses: up9cloud/action-notify@master
