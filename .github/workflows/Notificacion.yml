@@ -75,9 +75,9 @@ jobs:
       
       - name: Notify Discord
         env:
-          DISCORD_WEBHOOK_URL: ${{ steps.setup-discord.outputs.webhook_url }}
+          DISCORD_WEBHOOK_URL: ${{ needs.setup-discord.outputs.webhook_url }}
           DISCORD_TEMPLATE_PATH: "./discord-template.json"
         run: |
           curl -X POST -H "Content-Type: application/json" \
           -d @$DISCORD_TEMPLATE_PATH \
-          $DISCORD_WEBHOOK_URL
+          "$DISCORD_WEBHOOK_URL"
