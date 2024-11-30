@@ -1,25 +1,25 @@
 {
-  "content": null,
   "embeds": [
     {
-      "title": "🔄 Actualización en rama feature/josue",
+      "title": "🔄 Actualización en feature/josue",
       "description": "Cambios realizados por ${GITHUB_ACTOR}",
-      "color": "${STATUS_COLOR_DECIMAL}",
+      "color": "3447003",
       "fields": [
         {
-          "name": "📝 Mensaje del commit",
-          "value": "${GIT_COMMIT_MESSAGE_ESCAPED}"
+          "name": "Estado",
+          "value": "${GITHUB_JOB_STATUS}",
+          "inline": true
         },
         {
-          "name": "📊 Estado",
-          "value": "${GITHUB_JOB_STATUS} ${STATUS_EMOJI}"
-        },
-        {
-          "name": "🔗 Repositorio",
-          "value": "${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}"
+          "name": "Repositorio",
+          "value": "${GITHUB_REPOSITORY}",
+          "inline": true
         }
       ],
-      "timestamp": "${GITHUB_EVENT_TIME}"
+      "footer": {
+        "text": "GitHub Actions"
+      },
+      "timestamp": "${TIMESTAMP}"
     }
   ]
 } 
