@@ -12,9 +12,12 @@ jobs:
       - uses: actions/checkout@v2
         with:
           fetch-depth: 0
+          token: ${{ secrets.PAT_TOKEN }}
       
       - name: Create Josue branch
         run: |
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+          git config --global user.name "github-actions[bot]"
           if ! git ls-remote --heads origin feature/josue | grep feature/josue > /dev/null; then
             git checkout -b feature/josue
             git push origin feature/josue
